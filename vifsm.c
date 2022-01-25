@@ -1,5 +1,8 @@
 #include <stdio.h>
 // some reshources
+// Finite state mashine dock on C
+// https://aticleworld.com/state-machine-using-c
+// https://stackoverflow.com/questions/50165534/finite-state-machines-in-c
 // Linked list explanation
 // https://www.youtube.com/watch?v=MCIwn7mY4jY
 // cd '/c/Users/jviks/My Documents/OneDrive - Mikaelkirken/dev/c/vifsm'
