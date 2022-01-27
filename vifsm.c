@@ -7,6 +7,71 @@
 // https://www.youtube.com/watch?v=MCIwn7mY4jY
 // cd '/c/Users/jviks/My Documents/OneDrive - Mikaelkirken/dev/c/vifsm'
 
+//Different state of ATM machine
+typedef enum
+{
+    Idle_State,
+    On_State,
+    Pin_Eentered_State,
+    Option_Selected_State,
+    Amount_Entered_State,
+} eSystemState;
+
+
+
+//typedef of function pointer
+typedef eSystemState (*pfEventHandler)(void);
+
+
+
+//structure of state and event with event handler
+typedef struct
+{
+    eSystemState eStateMachineNextState;
+    pfEventHandler pfStateMachineTrasition;
+	eSystemState eStateMachineState;
+	
+} sStateMachine;
+
+
+//function call to dispatch the amount and return the ideal state
+eSystemState offHandler(void)
+{
+    return Idle_State;
+	printf("From on to off\n");
+}
+//function call to Enter amount and return amount entered state
+eSystemState onHandler(void)
+{
+	printf("From off to on\n");
+    return On_State;
+}
+
+//Initialize array of structure with states and event with proper handler
+sStateMachine asStateMachine [] =
+{
+    {Idle_State,onHandler,On_State},
+	{On_State,offHandler,Idle_State}
+};
+
+int main() {
+	
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/* 
 void inc(int *a)
 {
   
@@ -29,4 +94,4 @@ int main() {
    printf("a: %d\n", a);
    printf("Hello, World!\n");
    return 0;
-}
+} */
