@@ -37,8 +37,9 @@ typedef struct
 //function call to dispatch the amount and return the ideal state
 eSystemState offHandler(void)
 {
-    return Idle_State;
-	printf("From on to off\n");
+    printf("From on to off\n");
+	return Idle_State;
+	
 }
 //function call to Enter amount and return amount entered state
 eSystemState onHandler(void)
@@ -50,48 +51,18 @@ eSystemState onHandler(void)
 //Initialize array of structure with states and event with proper handler
 sStateMachine asStateMachine [] =
 {
-    {Idle_State,onHandler,On_State},
-	{On_State,offHandler,Idle_State}
+    {Idle_State, onHandler, On_State},
+	{On_State, offHandler, Idle_State},
+	{-1, NULL, -1}
 };
 
 int main() {
-	
+    int i;
+	eSystemState eNextState = On_State;
+    while(asStateMachine[i].eStateMachineNextState != -1)
+    {
+		eNextState = (*asStateMachine[i].pfStateMachineTrasition)();
+		i++;
+    }
+    return 0;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/* 
-void inc(int *a)
-{
-  
-  ++*a;
-}
-
-
-int main() {
-	int a;
-	int *b;
-
-	a = 10;
-	b = &a;
-   // printf() displays the string inside quotation
-   printf("a: %d\n", a);
-   printf("*b: %d\n", *b);
-   *b = 22;
-   printf("a: %d\n", a);
-   inc(&a);
-   printf("a: %d\n", a);
-   printf("Hello, World!\n");
-   return 0;
-} */
