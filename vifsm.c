@@ -34,22 +34,34 @@ typedef struct
 } sStateMachine;
 
 
-//function call to dispatch the amount and return the ideal state
-eSystemState maybeNormalHandler(char c)
+
+void printState(eSystemState state)
 {
-    if (c == 'j') {
-		printf("Maybe_Normal_State\n");
-		return EXIT_SUCCESS;
-	}
-	else {
-		return EXIT_FAILURE;
+   switch(state) {
+
+   case Insert_State  :
+      printf("Insert_State\n");
+      break; /* optional */
+
+   case Normal_State:
+      printf("Normal_State\n");
+      break; /* optional */
+	
+   case Maybe_Normal_State :
+      printf("Maybe_Normal_State\n");
+      break; /* optional */
+  
+   /* you can have any number of case statements */
+   default : /* Optional */
+   printf("State %d is not valid\n", state);
 	}
 }
+
+
 
 eSystemState intoNormalHandler(char c)
 {
     if (c == 'j') {
-		printf("Normal_State\n");
 		return EXIT_SUCCESS;
 	}
 	else {
@@ -60,7 +72,6 @@ eSystemState intoNormalHandler(char c)
 eSystemState outOfNormalHandler(char c)
 {
     if (c == 'i') {
-		printf("Insert_State\n");
 		return EXIT_SUCCESS;
 	}
 	else {
@@ -70,34 +81,44 @@ eSystemState outOfNormalHandler(char c)
 
 
 //function call to Enter amount and return amount entered state
-eSystemState insertHandler(char c)
+eSystemState stdHandler(char c)
 {
 	// No action required. This handler needs to be the last for current state
 	// It chould have been tested on "i" or "j"
-	printf("Insert_State\n");
-    return EXIT_SUCCESS;
-}
-
-//function call to Enter amount and return amount entered state
-eSystemState normalHandler(char c)
-{
-	// No action required. This handler needs to be the last for current state
-	// It chould have been tested on "i" or "j"
-	printf("Normal_State\n");
-    return EXIT_SUCCESS;
+   return EXIT_SUCCESS;
 }
 
 //Initialize array of structure with states and event with proper handler
 sStateMachine asStateMachine [] =
 {
-    {Insert_State, maybeNormalHandler, Maybe_Normal_State},
-    {Insert_State, insertHandler, Insert_State},
+    {Insert_State, intoNormalHandler, Maybe_Normal_State},
+    {Insert_State, stdHandler, Insert_State},
     {Maybe_Normal_State, intoNormalHandler, Normal_State},
-    {Maybe_Normal_State, insertHandler, Insert_State},
+    {Maybe_Normal_State, stdHandler, Insert_State},
     {Normal_State, outOfNormalHandler, Insert_State},
-    {Normal_State, normalHandler, Normal_State},
+    {Normal_State, stdHandler, Normal_State},
 	{-1, NULL, -1}
 };
+
+eSystemState goToNextState(eSystemState eNextState, char input)
+{
+	int i = 0, validState;
+			
+	while(asStateMachine[i].eStateMachineState != -1)
+    {
+
+		if (asStateMachine[i].eStateMachineState == eNextState)
+		{
+			validState = (*asStateMachine[i].pfStateMachineTrasition)(input);
+			if (validState == EXIT_SUCCESS)
+			{
+				return asStateMachine[i].eStateMachineNextState;
+			}
+		}
+		i++;
+    }
+}
+
 
 int main() {
  	char input;
@@ -107,58 +128,11 @@ int main() {
 
     while(input != 'q')
     {
-		int i = 0, validState;
-		input = getch();			
+		input = getch();
 		printf("Input char: %c --> ", input);
-		
-	while(asStateMachine[i].eStateMachineState != -1)
-    {
+		eNextState = goToNextState(eNextState, input);
+		printState(eNextState);
 
-		if (asStateMachine[i].eStateMachineState == eNextState)
-		{
-			validState = (*asStateMachine[i].pfStateMachineTrasition)(input);
-			if (validState == EXIT_SUCCESS)
-			{
-				printf("  Loop counter: %d --> ", i);
-				printf("  From state: %d --> ", eNextState);
-				eNextState = asStateMachine[i].eStateMachineNextState;
-				printf("  To state: %d --> ", eNextState);
-				break;
-			}
-		}
-		i++;
-    }
 	}
     return 0;
 }
-
-
-
-
-/* 
-int main() {
-    int i, validState;
-	char input;
-	eSystemState eNextState = asStateMachine[0].eStateMachineState;
-    while(asStateMachine[i].eStateMachineState != -1)
-    {
-		if (asStateMachine[i].eStateMachineState == eNextState)
-		{
-			input = getch();			
-			printf("Input char: %c --> ", input);
-			
-			validState = (*asStateMachine[i].pfStateMachineTrasition)(input);
-			if (validState == EXIT_SUCCESS)
-			{
-				printf("Loop counter: %d --> ", i);
-				printf("From state: %d --> ", eNextState);
-				eNextState = asStateMachine[i].eStateMachineNextState;
-				printf("To state: %d --> ", eNextState);
-				
-				i = 0;
-			}
-		}
-		i++;
-    }
-    return 0;
-} */
